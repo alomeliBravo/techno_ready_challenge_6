@@ -13,7 +13,7 @@ public class JdbiUserRepository implements UserRepository {
 
     private final Jdbi jdbi;
 
-    JdbiUserRepository(DatabaseProvider dataBaseProvider) {
+    public JdbiUserRepository(DatabaseProvider dataBaseProvider) {
         this.jdbi = (Jdbi) dataBaseProvider.getConnection();
     }
 
