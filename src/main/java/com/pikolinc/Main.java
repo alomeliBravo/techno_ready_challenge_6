@@ -1,17 +1,27 @@
 package com.pikolinc;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+import com.pikolinc.config.database.JdbiProvider;
+import com.pikolinc.config.json.GsonProvider;
+import com.pikolinc.controller.UserController;
+import com.pikolinc.exception.GlobalExceptionHandler;
+import com.pikolinc.repository.impl.JdbiUserRepository;
+import com.pikolinc.routes.Router;
+import com.pikolinc.routes.UserApiRoutes;
+import com.pikolinc.service.impl.UserServiceImpl;
+import spark.Spark;
+
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
-
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        Spark.port(8080);
+        JdbiProvider jdbiProvider = new JdbiProvider();
+        jdbiProvider.connect();
+        List<Router> routes = List.of(
+                new UserApiRoutes(new UserController(new UserServiceImpl(new JdbiUserRepository(jdbiProvider)), new GsonProvider()))
+        );
+        routes.forEach(Router::initRoute);
+        GlobalExceptionHandler.init();
     }
 }
