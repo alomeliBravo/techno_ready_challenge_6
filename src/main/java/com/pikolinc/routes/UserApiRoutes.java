@@ -1,0 +1,28 @@
+package com.pikolinc.routes;
+
+import com.pikolinc.controller.UserController;
+import spark.Spark;
+
+public class UserApiRoutes implements Router {
+
+    private final UserController userController;
+
+    public UserApiRoutes(UserController userController) {
+        this.userController = userController;
+    }
+
+    @Override
+    public void initRoute() {
+        Spark.path("/api/v1/users", () -> {
+           Spark.before("/*",(req, res) -> {
+               res.type("application/json");
+           });
+           Spark.post("/users", userController::saveUser);
+           Spark.get("/users", userController::findAll);
+           Spark.get("/users/:id", userController::findById);
+           Spark.put("/users/:id", userController::updateUserById);
+           Spark.options("/users/:id", userController::findById);
+           Spark.delete("/users/:id", userController::deleteUserById);
+        });
+    }
+}
