@@ -19,13 +19,13 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(JdbiUserRepository jdbiUserRepository) {
         this.userRepository = jdbiUserRepository;
+        this.userRepository.init();
     }
 
     @Override
     public UserResponseDTO saveUser(@Valid UserCreateDTO dto) {
         User user = UserMapper.toEntity(dto);
-        this.userRepository.save(user);
-        return UserMapper.toResponseDTO(user);
+        return UserMapper.toResponseDTO(this.userRepository.save(user));
     }
 
     @Override
