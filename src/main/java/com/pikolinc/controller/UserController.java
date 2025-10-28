@@ -2,6 +2,7 @@ package com.pikolinc.controller;
 
 import com.pikolinc.config.JsonProvider;
 import com.pikolinc.dto.user.UserCreateDTO;
+import com.pikolinc.dto.user.UserResponseDTO;
 import com.pikolinc.dto.user.UserUpdateDTO;
 import com.pikolinc.exception.BadRequestException;
 import com.pikolinc.service.impl.UserServiceImpl;
@@ -25,7 +26,8 @@ public class UserController {
             throw new BadRequestException("Body is empty");
         }
         res.status(201);
-        return this.userService.saveUser(jsonProvider.fromJson(body, UserCreateDTO.class));
+        UserResponseDTO user = this.userService.saveUser(jsonProvider.fromJson(body, UserCreateDTO.class));
+        return jsonProvider.toJson(user);
     }
 
     public Object findAll(Request req, Response res) {
