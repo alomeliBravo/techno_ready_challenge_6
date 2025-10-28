@@ -13,7 +13,7 @@ public class UserApiRoutes implements Router {
 
     @Override
     public void initRoute() {
-        Spark.path("/api/v1/users", () -> {
+        Spark.path("/api/v1", () -> {
            Spark.before("/*",(req, res) -> {
                res.type("application/json");
            });
