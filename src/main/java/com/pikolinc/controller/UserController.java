@@ -8,6 +8,8 @@ import com.pikolinc.service.impl.UserServiceImpl;
 import spark.Request;
 import spark.Response;
 
+import java.util.Map;
+
 public class UserController {
     private final UserServiceImpl userService;
     private final JsonProvider jsonProvider;
@@ -22,16 +24,18 @@ public class UserController {
         if (body == null ||  body.isBlank()) {
             throw new BadRequestException("Body is empty");
         }
-
+        res.status(201);
         return this.userService.saveUser(jsonProvider.fromJson(body, UserCreateDTO.class));
     }
 
     public Object findAll(Request req, Response res) {
+        res.status(200);
         return this.jsonProvider.toJson(this.userService.findAll());
     }
 
     public Object findById(Request req, Response res) {
         long id = Long.parseLong(req.params(":id"));
+        res.status(200);
         return this.jsonProvider.toJson(this.userService.findById(id));
     }
 
@@ -42,11 +46,14 @@ public class UserController {
             throw new BadRequestException("Body is empty");
         }
         UserUpdateDTO dto = jsonProvider.fromJson(body, UserUpdateDTO.class);
+        res.status(200);
         return jsonProvider.toJson(this.userService.updateUserById(id,dto));
     }
 
-    public void deleteUserById(Request req, Response res) {
+    public Map<String, Object> deleteUserById(Request req, Response res) {
         long id = Long.parseLong(req.params(":id"));
         this.userService.deleteUserById(id);
+        res.status(204);
+        return Map.of("message", "User has been deleted");
     }
 }
