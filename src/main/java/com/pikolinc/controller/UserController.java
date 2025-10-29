@@ -43,6 +43,22 @@ public class UserController {
         return this.jsonProvider.toJson(this.userService.findById(id));
     }
 
+    public Object findByEmail(Request req, Response res) {
+        res.status(200);
+        return this.jsonProvider.toJson(this.userService.findByEmail(req.params(":email")));
+    }
+
+    public Object options(Request req, Response res) {
+        long id  = RequestValidator.parseAndValidateId(req.params(":id"));
+        Boolean userExist = this.userService.userExist(id);
+        if(!userExist){
+            res.status(400);
+            return "User with id: " + req.params(":id") + " not exists";
+        }
+        res.status(200);
+        return "User with id: " + req.params(":id") + " exists";
+    }
+
     public Object updateUserById(Request req, Response res) {
         long id = RequestValidator.parseAndValidateId(req.params(":id"));
         String body = req.body();

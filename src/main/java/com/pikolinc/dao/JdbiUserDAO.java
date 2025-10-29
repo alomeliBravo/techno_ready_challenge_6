@@ -32,6 +32,12 @@ public interface JdbiUserDAO {
     @SqlQuery("SELECT * FROM users")
     List<User> findAll();
 
+    @SqlQuery("SELECT * FROM users where email = :email")
+    Optional<User> findByEmail(@Bind("email") String email);
+
+    @SqlQuery("SELECT * FROM users WHERE id = :id")
+    int userExist(@Bind("id") Long id);
+
     @SqlUpdate("UPDATE users SET name = :name, email = :email WHERE id = :id")
     int update(@Bind("id") Long id, @BindBean User user);
 
