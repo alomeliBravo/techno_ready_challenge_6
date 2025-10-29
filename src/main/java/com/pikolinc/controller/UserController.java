@@ -43,6 +43,11 @@ public class UserController {
         return this.jsonProvider.toJson(this.userService.findById(id));
     }
 
+    public Object findByEmail(Request req, Response res) {
+        res.status(200);
+        return this.jsonProvider.toJson(this.userService.findByEmail(req.params(":email")));
+    }
+
     public Object updateUserById(Request req, Response res) {
         long id = RequestValidator.parseAndValidateId(req.params(":id"));
         String body = req.body();
