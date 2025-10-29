@@ -52,6 +52,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean userExist(Long id) {
+        int user = userRepository.userExist(id);
+        if(user > 0){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public UserResponseDTO updateUserById(Long id, @Valid UserUpdateDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
