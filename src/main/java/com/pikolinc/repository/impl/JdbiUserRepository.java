@@ -56,4 +56,8 @@ public class JdbiUserRepository implements UserRepository {
         return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.findByEmail(email));
     }
 
+    public int userExist(Long id) {
+        return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.userExist(id));
+    }
+
 }
