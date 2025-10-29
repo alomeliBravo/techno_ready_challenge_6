@@ -45,6 +45,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponseDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        return UserMapper.toResponseDTO(user);
+    }
+
+    @Override
     public UserResponseDTO updateUserById(Long id, @Valid UserUpdateDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
