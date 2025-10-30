@@ -2,6 +2,7 @@ package com.pikolinc.repository.impl;
 
 import com.pikolinc.config.DatabaseProvider;
 import com.pikolinc.dao.JdbiUserDAO;
+import com.pikolinc.dto.user.UserResponseDTO;
 import com.pikolinc.model.User;
 import com.pikolinc.repository.UserRepository;
 import org.jdbi.v3.core.Jdbi;
@@ -23,7 +24,7 @@ public class JdbiUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public UserResponseDTO save(User user) {
         long id = this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.save(user));
 
         return findById(id)
@@ -31,17 +32,17 @@ public class JdbiUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(){
+    public List<UserResponseDTO> findAll(){
         return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.findAll());
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<UserResponseDTO> findById(Long id) {
         return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.findById(id));
     }
 
     @Override
-    public Optional<User> update(Long id, User user) {
+    public Optional<UserResponseDTO> update(Long id, User user) {
         int rows = this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.update(id, user));
         if (rows == 0 ) return Optional.empty();
         return findById(id);
@@ -52,12 +53,12 @@ public class JdbiUserRepository implements UserRepository {
         return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.delete(id) > 0);
     }
 
-    public Optional<User> findByEmail(String email) {
+    public Optional<UserResponseDTO> findByEmail(String email) {
         return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.findByEmail(email));
     }
 
-    public int userExist(Long id) {
-        return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.userExist(id));
+    public Boolean userExist(Long id) {
+        return this.jdbi.withExtension(JdbiUserDAO.class, dao -> dao.userExist(id) > 0);
     }
 
 }
