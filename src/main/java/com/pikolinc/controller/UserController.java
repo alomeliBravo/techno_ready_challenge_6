@@ -53,26 +53,36 @@ public class UserController {
         Boolean userExist = this.userService.userExist(id);
         if(!userExist){
             res.status(400);
-            return "User with id: " + req.params(":id") + " not exists";
+            return this.jsonProvider.toJson(Map.of("message","User with id: " + req.params(":id") + " not exists"));
         }
         res.status(200);
-        return "User with id: " + req.params(":id") + " exists";
+        return this.jsonProvider.toJson(Map.of("message","User with id: " + req.params(":id") + " exists"));
     }
 
     public Object updateUserById(Request req, Response res) {
         long id = RequestValidator.parseAndValidateId(req.params(":id"));
         String body = req.body();
         RequestValidator.validateEmptyBody(body);
-        UserUpdateDTO dto = jsonProvider.fromJson(body, UserUpdateDTO.class);
+        UserCreateDTO dto = jsonProvider.fromJson(body, UserCreateDTO.class);
         ValidationProvider.validate(dto);
         res.status(200);
         return jsonProvider.toJson(this.userService.updateUserById(id,dto));
     }
 
-    public Map<String, Object> deleteUserById(Request req, Response res) {
+    public Object patchUserById(Request req, Response res) {
+        long id = RequestValidator.parseAndValidateId(req.params(":id"));
+        String body = req.body();
+        RequestValidator.validateEmptyBody(body);
+        UserUpdateDTO dto = jsonProvider.fromJson(body, UserUpdateDTO.class);
+        ValidationProvider.validate(dto);
+        res.status(200);
+        return jsonProvider.toJson(this.userService.patchUserById(id,dto));
+    }
+
+    public Object deleteUserById(Request req, Response res) {
         long id = RequestValidator.parseAndValidateId(req.params(":id"));
         this.userService.deleteUserById(id);
-        res.status(204);
-        return Map.of("message", "User has been deleted");
+        res.status(200);
+        return this.jsonProvider.toJson(Map.of("message", "User has been deleted"));
     }
 }
