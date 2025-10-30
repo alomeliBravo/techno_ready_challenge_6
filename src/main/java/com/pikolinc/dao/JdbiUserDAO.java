@@ -1,7 +1,10 @@
 package com.pikolinc.dao;
 
+import com.pikolinc.dto.user.UserResponseDTO;
 import com.pikolinc.model.User;
+import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapperFactory;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
@@ -11,7 +14,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
 import java.util.Optional;
 
-@RegisterBeanMapper(User.class)
+@RegisterBeanMapper(UserResponseDTO.class)
 public interface JdbiUserDAO {
     @SqlUpdate("""
         CREATE TABLE IF NOT EXISTS users (
@@ -27,15 +30,15 @@ public interface JdbiUserDAO {
     long save(@BindBean User user);
 
     @SqlQuery("SELECT * FROM users WHERE id = :id")
-    Optional<User> findById(@Bind("id") Long id);
+    Optional<UserResponseDTO> findById(@Bind("id") Long id);
 
     @SqlQuery("SELECT * FROM users")
-    List<User> findAll();
+    List<UserResponseDTO> findAll();
 
     @SqlQuery("SELECT * FROM users where email = :email")
-    Optional<User> findByEmail(@Bind("email") String email);
+    Optional<UserResponseDTO> findByEmail(@Bind("email") String email);
 
-    @SqlQuery("SELECT * FROM users WHERE id = :id")
+    @SqlQuery("SELECT COUNT(*) FROM users WHERE id = :id")
     int userExist(@Bind("id") Long id);
 
     @SqlUpdate("UPDATE users SET name = :name, email = :email WHERE id = :id")
