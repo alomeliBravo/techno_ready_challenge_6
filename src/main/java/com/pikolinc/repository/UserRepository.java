@@ -5,7 +5,7 @@ import com.pikolinc.model.User;
 
 import java.util.Optional;
 
-public interface UserRepository extends Repository<User, Long>{
-    Optional<User> findByEmail(String email);
-    int userExist(Long id);
+public interface UserRepository extends Repository<UserResponseDTO, User, Long>{
+    Optional<UserResponseDTO> findByEmail(String email);
+    Boolean userExist(Long id);
 }
