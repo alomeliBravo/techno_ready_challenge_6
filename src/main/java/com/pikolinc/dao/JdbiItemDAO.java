@@ -33,7 +33,7 @@ public interface JdbiItemDAO {
     @SqlQuery("SELECT * FROM items")
     List<Item> findAll();
 
-    @SqlQuery("SELECT * FROM items WHERE id = :id")
+    @SqlQuery("SELECT COUNT(*) FROM items WHERE id = :id")
     int itemExist(@Bind("id") long id);
 
     @SqlUpdate("UPDATE items SET name = :name, description = :description, price = :price WHERE id = :id")
