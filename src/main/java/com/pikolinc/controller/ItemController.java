@@ -70,13 +70,13 @@ public class ItemController {
             return this.jsonProvider.toJson(Map.of("message", "Item with id " + id + " does not exist"));
         }
         res.status(200);
-        return this.jsonProvider.toJson(Map.of("message", "Item with id " + id + " does not exist"));
+        return this.jsonProvider.toJson(Map.of("message", "Item with id " + id + " exist"));
     }
 
     public Object deleteItem(Request req, Response res) {
         long id = Long.parseLong(req.params(":id"));
         this.itemService.deleteById(id);
-        res.status(204);
+        res.status(200);
         return this.jsonProvider.toJson(Map.of("message", "Item has been deleted"));
     }
 }
