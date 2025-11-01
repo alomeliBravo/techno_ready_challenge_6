@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OfferResponseDTO {
     Long id;
-    Long clientId;
-    String clientName;
-    String clientEmail;
+    Long userId;
+    String userName;
+    String userEmail;
     Long itemId;
     String itemName;
     String itemDescription;
-    Double initalPrice;
+    Double initialPrice;
     OfferStatus offerStatus;
     Double amountOffer;
 }
