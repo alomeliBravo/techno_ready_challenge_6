@@ -5,8 +5,8 @@ import com.pikolinc.utils.ValidOfferStatus;
 import jakarta.validation.constraints.Positive;
 
 public class OfferUpdateDTO {
-    @Positive(message = "clientId must be greater than zero")
-    Long clientId;
+    @Positive(message = "user must be greater than zero")
+    Long userId;
     @Positive(message = "itemId must be greater than zero")
     Long itemId;
     @ValidOfferStatus
