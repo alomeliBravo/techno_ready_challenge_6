@@ -24,53 +24,54 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDTO saveItem(@Valid ItemCreateDTO dto) {
         Item item = ItemMapper.toEntity(dto);
-        return ItemMapper.toResponseDTO(this.itemRepository.save(item));
+        return this.itemRepository.save(item);
     }
 
     @Override
     public List<ItemResponseDTO> findAll() {
-        List<Item> items = this.itemRepository.findAll();
+        List<ItemResponseDTO> items = this.itemRepository.findAll();
         if (items.isEmpty()) {
             return List.of();
         }
-        return items.stream().map(ItemMapper::toResponseDTO).toList();
+        return items;
     }
 
     @Override
     public ItemResponseDTO findById(Long id) {
-        Item item = this.itemRepository.findById(id)
+        return this.itemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Item with id: " + id + " not found"));
-        return ItemMapper.toResponseDTO(item);
     }
 
     @Override
     public ItemResponseDTO updateById(Long id, @Valid ItemCreateDTO dto){
-        Item item = this.itemRepository.findById(id)
+        ItemResponseDTO itemResponse = this.itemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Item with id: " + id + " not found"));
-        item.setName(dto.name());
-        item.setDescription(dto.description());
-        item.setPrice(dto.price());
-        itemRepository.update(id,item);
-        return ItemMapper.toResponseDTO(item);
+        Item updatedItem = ItemMapper.responseToEntity(id, itemResponse);
+        updatedItem.setName(dto.name());
+        updatedItem.setDescription(dto.description());
+        updatedItem.setPrice(dto.price());
+        itemRepository.update(id,updatedItem);
+        return ItemMapper.toResponseDTO(updatedItem);
     }
 
     @Override
     public ItemResponseDTO patchById(Long id, @Valid ItemUpdateDTO dto){
-        Item item = this.itemRepository.findById(id)
+        ItemResponseDTO itemResponse = this.itemRepository.findById(id)
                 .orElseThrow(() ->  new NotFoundException("Item with id: " + id + " not found"));
-        ItemMapper.updateItem(item, dto);
-        this.itemRepository.update(id, item);
-        return ItemMapper.toResponseDTO(item);
+        Item updatedItem = ItemMapper.responseToEntity(id, itemResponse);
+        ItemMapper.updateItem(updatedItem, dto);
+        this.itemRepository.update(id, updatedItem);
+        return ItemMapper.toResponseDTO(updatedItem);
     }
 
     @Override
     public Boolean itemExist(Long id){
-        return this.itemRepository.itemExist(id) > 0 ? true : false;
+        return this.itemRepository.itemExist(id) > 0;
     }
 
     @Override
     public Boolean deleteById(Long id){
-        Item item = this.itemRepository.findById(id)
+        ItemResponseDTO item = this.itemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Item with id: " + id + " not found"));
         return this.itemRepository.delete(id);
     }

@@ -1,5 +1,6 @@
 package com.pikolinc.dao;
 
+import com.pikolinc.dto.item.ItemResponseDTO;
 import com.pikolinc.model.Item;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -11,7 +12,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import java.util.List;
 import java.util.Optional;
 
-@RegisterBeanMapper(Item.class)
+@RegisterBeanMapper(ItemResponseDTO.class)
 public interface JdbiItemDAO {
     @SqlUpdate("""
         CREATE TABLE IF NOT EXISTS items (
@@ -28,10 +29,10 @@ public interface JdbiItemDAO {
     long save(@BindBean Item item);
 
     @SqlQuery("SELECT * FROM items WHERE id = :id")
-    Optional<Item> findById(@Bind("id") long id);
+    Optional<ItemResponseDTO> findById(@Bind("id") long id);
 
     @SqlQuery("SELECT * FROM items")
-    List<Item> findAll();
+    List<ItemResponseDTO> findAll();
 
     @SqlQuery("SELECT COUNT(*) FROM items WHERE id = :id")
     int itemExist(@Bind("id") long id);

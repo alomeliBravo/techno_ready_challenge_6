@@ -4,7 +4,7 @@ import com.pikolinc.enums.OfferStatus;
 
 public class Offer {
     Long id;
-    Long clientId;
+    Long userId;
     Long itemId;
     OfferStatus status;
     Double amount;

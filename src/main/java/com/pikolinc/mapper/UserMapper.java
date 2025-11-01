@@ -31,4 +31,14 @@ public class UserMapper {
                 user.getEmail()
         );
     }
+
+    public static User responseToEntity(Long id, UserResponseDTO dto) {
+        if (dto == null) return null;
+
+        return User.builder()
+                .id(id)
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .build();
+    }
 }

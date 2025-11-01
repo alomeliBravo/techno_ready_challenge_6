@@ -7,9 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record OfferCreateDTO(
-        @NotNull(message = "clientId is required")
-        @Positive(message = "clientId must be greater than zero")
-        Long clientId,
+        @NotNull(message = "userId is required")
+        @Positive(message = "userId must be greater than zero")
+        Long userId,
         @NotNull(message = "itemId is required")
         @Positive(message = "itemId must be greater than zero")
         Long itemId,

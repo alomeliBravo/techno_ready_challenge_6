@@ -34,4 +34,15 @@ public class ItemMapper {
         if (dto.description() != null) item.setDescription(dto.description());
         if (dto.price() != null) item.setPrice(dto.price());
     }
+
+    public static Item responseToEntity(Long id, ItemResponseDTO dto) {
+        if (dto == null) return null;
+
+        return Item.builder()
+                .id(id)
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .price(dto.getPrice())
+                .build();
+    }
 }

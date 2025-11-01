@@ -2,6 +2,7 @@ package com.pikolinc.repository.impl;
 
 import com.pikolinc.config.DatabaseProvider;
 import com.pikolinc.dao.JdbiItemDAO;
+import com.pikolinc.dto.item.ItemResponseDTO;
 import com.pikolinc.exception.NotFoundException;
 import com.pikolinc.model.Item;
 import com.pikolinc.repository.ItemRepository;
@@ -23,7 +24,7 @@ public class JdbiItemRepository implements ItemRepository {
     }
 
     @Override
-    public Item save(Item item) {
+    public ItemResponseDTO save(Item item) {
         long id = this.jdbi.withExtension(JdbiItemDAO.class, dao -> dao.save(item));
 
         return this.jdbi.withExtension(JdbiItemDAO.class, dao -> dao.findById(id))
@@ -31,17 +32,17 @@ public class JdbiItemRepository implements ItemRepository {
     }
 
     @Override
-    public List<Item> findAll() {
+    public List<ItemResponseDTO> findAll() {
         return this.jdbi.withExtension(JdbiItemDAO.class, dao -> dao.findAll());
     }
 
     @Override
-    public Optional<Item> findById(Long id) {
+    public Optional<ItemResponseDTO> findById(Long id) {
         return this.jdbi.withExtension(JdbiItemDAO.class, dao -> dao.findById(id));
     }
 
     @Override
-    public Optional<Item> update(Long id, Item item) {
+    public Optional<ItemResponseDTO> update(Long id, Item item) {
         int rows = this.jdbi.withExtension(JdbiItemDAO.class, dao -> dao.update(id, item));
         if (rows == 0) return Optional.empty();
         return findById(id);
