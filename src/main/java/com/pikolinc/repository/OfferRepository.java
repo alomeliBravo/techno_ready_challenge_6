@@ -11,4 +11,5 @@ public interface OfferRepository extends Repository<OfferResponseDTO, Offer, Lon
     List<OfferResponseDTO> findAllOffersByUserId(Long userId);
     List<OfferResponseDTO> findAllOffersByItemId(Long itemId);
     Optional<OfferResponseDTO> updateOfferStatus(Long id, OfferStatus status);
+    Boolean offerExist(Long id);
 }

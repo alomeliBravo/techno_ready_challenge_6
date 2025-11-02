@@ -77,4 +77,9 @@ public class JdbiOfferRepository implements OfferRepository {
     public boolean delete(Long id){
         return this.jdbi.withExtension(JdbiOffersDAO.class, dao -> dao.deleteOffer(id) > 0) ;
     }
+
+    @Override
+    public Boolean offerExist(Long id) {
+        return this.jdbi.withExtension(JdbiOffersDAO.class, dao -> dao.offerExists(id) > 0);
+    }
 }
