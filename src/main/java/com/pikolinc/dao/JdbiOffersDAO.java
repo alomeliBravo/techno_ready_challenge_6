@@ -121,11 +121,13 @@ public interface JdbiOffersDAO {
     @SqlUpdate("""
         UPDATE offers
         SET 
+            userId = :userId,
+            itemId = :itemId,
             status = :status,
             amount = :amount
         WHERE id = :id
     """)
-    int updateOffer(@Bind("id") long id, @Bind("status")OfferStatus status, @Bind("amount") Double amount);
+    int updateOffer(@Bind("id") long id, @BindBean Offer offer);
 
     @SqlUpdate("""
         UPDATE offers
