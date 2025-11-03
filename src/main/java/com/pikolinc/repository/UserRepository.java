@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface UserRepository extends Repository<UserResponseDTO, User, Long>{
     Optional<UserResponseDTO> findByEmail(String email);
     Boolean userExist(Long id);
+    Boolean emailExist(String email);
 }
