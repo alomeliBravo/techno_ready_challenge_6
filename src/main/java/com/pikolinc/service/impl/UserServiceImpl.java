@@ -82,4 +82,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
         this.userRepository.delete(id);
     }
+
+    @Override
+    public Boolean emailExist(String email) {
+        return this.userRepository.emailExist(email);
+    }
 }
