@@ -1,5 +1,6 @@
-package com.pikolinc.dto.user;
+package com.pikolinc.model;
 
+import com.pikolinc.enums.OfferStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDTO {
+public class Offer {
     Long id;
-    String name;
-    String email;
+    Long userId;
+    Long itemId;
+    OfferStatus status;
+    Double amount;
 }
+
+

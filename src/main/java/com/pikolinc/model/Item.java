@@ -1,4 +1,4 @@
-package com.pikolinc.dto.user;
+package com.pikolinc.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,11 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDTO {
+@Builder
+public class Item {
     Long id;
     String name;
-    String email;
+    String description;
+    Double price;
 }

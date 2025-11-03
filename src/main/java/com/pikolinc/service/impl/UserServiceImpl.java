@@ -25,32 +25,55 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO saveUser(@Valid UserCreateDTO dto) {
         User user = UserMapper.toEntity(dto);
-        return UserMapper.toResponseDTO(this.userRepository.save(user));
+        return this.userRepository.save(user);
     }
 
     @Override
     public List<UserResponseDTO> findAll() {
-        List<User> users = userRepository.findAll();
+        List<UserResponseDTO> users = userRepository.findAll();
         if(users.isEmpty()){
             throw new NotFoundException("No users found");
         }
-        return users.stream().map(UserMapper::toResponseDTO).toList();
+        return users;
     }
 
     @Override
     public UserResponseDTO findById(long id) {
-        User user = userRepository.findById(id)
+        UserResponseDTO user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        return UserMapper.toResponseDTO(user);
+        return user;
     }
 
     @Override
-    public UserResponseDTO updateUserById(Long id, @Valid UserUpdateDTO dto){
-        User user = userRepository.findById(id)
+    public UserResponseDTO findByEmail(String email) {
+        UserResponseDTO user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        UserMapper.updateEntity(user, dto);
-        userRepository.update(id, user);
-        return UserMapper.toResponseDTO(user);
+        return user;
+    }
+
+    @Override
+    public Boolean userExist(Long id) {
+        return userRepository.userExist(id);
+    }
+
+    @Override
+    public UserResponseDTO updateUserById(Long id, @Valid UserCreateDTO dto){
+        UserResponseDTO user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        User updatedUser = UserMapper.responseToEntity(id,user);
+        updatedUser.setName(dto.name());
+        updatedUser.setEmail(dto.email());
+        userRepository.update(id, updatedUser);
+        return UserMapper.toResponseDTO(updatedUser);
+    }
+
+    @Override
+    public UserResponseDTO patchUserById(Long id, @Valid UserUpdateDTO dto) {
+        UserResponseDTO user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        User updatedUser = UserMapper.responseToEntity(id,user);
+        UserMapper.updateEntity(updatedUser, dto);
+        return UserMapper.toResponseDTO(updatedUser);
     }
 
     @Override

@@ -3,11 +3,11 @@ package com.pikolinc.repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface Repository<T, ID> {
+public interface Repository<X, T, ID> {
     void init();
-    T save(T model);
-    List<T> findAll();
-    Optional<T> findById(ID id);
-    Optional<T> update(ID id, T model);
+    X save(T model);
+    List<X> findAll();
+    Optional<X> findById(ID id);
+    Optional<X> update(ID id, T model);
     boolean delete(ID id);
 }

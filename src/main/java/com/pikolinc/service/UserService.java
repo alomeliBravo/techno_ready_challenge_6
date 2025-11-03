@@ -10,6 +10,9 @@ public interface UserService {
     UserResponseDTO saveUser(UserCreateDTO dto);
     List<UserResponseDTO> findAll();
     UserResponseDTO findById(long id);
-    UserResponseDTO updateUserById(Long id, UserUpdateDTO dto);
+    UserResponseDTO findByEmail(String email);
+    Boolean userExist(Long id);
+    UserResponseDTO updateUserById(Long id, UserCreateDTO dto);
+    UserResponseDTO patchUserById(Long id, UserUpdateDTO dto);
     void deleteUserById(long id);
 }
