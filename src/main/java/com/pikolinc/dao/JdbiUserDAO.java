@@ -38,6 +38,9 @@ public interface JdbiUserDAO {
     @SqlQuery("SELECT * FROM users where email = :email")
     Optional<UserResponseDTO> findByEmail(@Bind("email") String email);
 
+    @SqlQuery("SELECT COUNT(*) FROM users WHERE email = :email")
+    int emailTaken(@Bind("email") String email);
+
     @SqlQuery("SELECT COUNT(*) FROM users WHERE id = :id")
     int userExist(@Bind("id") Long id);
 
