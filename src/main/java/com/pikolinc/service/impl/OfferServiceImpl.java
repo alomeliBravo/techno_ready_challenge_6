@@ -77,7 +77,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Boolean offerExist(Long id) {
-        return this.offerExist(id);
+        return this.offerRepository.offerExist(id);
     }
 
     @Override
