@@ -1,5 +1,6 @@
 package com.pikolinc.exception;
 
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.pikolinc.config.JsonProvider;
 import com.pikolinc.config.json.GsonProvider;
@@ -60,6 +61,12 @@ public class GlobalExceptionHandler {
             res.type("application/json");
             res.status(400);
             res.body(jsonProvider.toJson(new ErrorResponse(400, "Json body must be valid")));
+        });
+
+        Spark.exception(JsonParseException.class, (ex, req, res) -> {
+            res.type("application/json");
+            res.status(400);
+            res.body(jsonProvider.toJson(new ErrorResponse(400, ex.getMessage())));
         });
     }
 }
