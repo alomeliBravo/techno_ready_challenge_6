@@ -25,9 +25,13 @@ public class UserController {
     public Object saveUser(Request req, Response res) {
         String body  = req.body();
         RequestValidator.validateEmptyBody(body);
-        res.status(201);
         UserCreateDTO dto = jsonProvider.fromJson(body, UserCreateDTO.class);
         ValidationProvider.validate(dto);
+        if (this.userService.emailExist(dto.email())) {
+            res.status(400);
+            throw new  BadRequestException("Email already exist");
+        }
+        res.status(201);
         UserResponseDTO user = this.userService.saveUser(dto);
         return jsonProvider.toJson(user);
     }
