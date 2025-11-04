@@ -366,3 +366,97 @@
                 const data = JSON.parse(event.data);
                 if (data.type === 'priceUpdate' && data.itemId === itemId) {
                     document.getElementById('current-price').textContent = data.currentPrice.toFixed(2);
+                    loadOffers();
+                }
+            };
+
+            ws.onclose = () => {
+                document.getElementById('ws-status').classList.remove('connected');
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+
+        function loadOffers() {
+            fetch(`/api/items/${itemId}/offers`)
+                .then(res => res.json())
+                .then(offers => {
+                    const tbody = document.getElementById('offers-tbody');
+                    const noOffers = document.getElementById('no-offers-message');
+                    const table = document.getElementById('offers-table');
+
+                    if (!offers.length) {
+                        table.style.display = 'none';
+                        noOffers.style.display = 'block';
+                        return;
+                    }
+
+                    table.style.display = 'table';
+                    noOffers.style.display = 'none';
+
+                    tbody.innerHTML = offers.map(o => `
+                        <tr>
+                            <td>${o.userName}</td>
+                            <td>${o.userEmail}</td>
+                            <td><strong>$${o.amountOffer.toFixed(2)}</strong></td>
+                            <td><span class="status-badge status-${o.offerStatus.toLowerCase()}">${o.offerStatus}</span></td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        document.getElementById('offer-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const currentPrice = parseFloat(document.getElementById('current-price').textContent);
+            const messageDiv = document.getElementById('message');
+            const btn = document.getElementById('submit-btn');
+
+            btn.disabled = true;
+            btn.textContent = 'Creating Offer...';
+
+            try {
+                const userRes = await fetch(`/api/v1/users/by-email/${encodeURIComponent(email)}`);
+                if (!userRes.ok) throw new Error('User not found. Verify your email.');
+
+                if (amount <= currentPrice)
+                    throw new Error('Offer must be higher than current price.');
+
+                const user = await userRes.json();
+
+                const offerRes = await fetch('/api/v1/offers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        itemId,
+                        offerStatus: 'PENDING',
+                        amount
+                    })
+                });
+
+                if (!offerRes.ok) {
+                    const err = await offerRes.json();
+                    throw new Error(err.errorMessage || 'Error creating offer.');
+                }
+
+                messageDiv.textContent = 'Offer created successfully!';
+                messageDiv.className = 'message success show';
+                document.getElementById('offer-form').reset();
+                loadOffers();
+                setTimeout(() => messageDiv.classList.remove('show'), 3000);
+
+            } catch (err) {
+                messageDiv.textContent = err.message;
+                messageDiv.className = 'message error show';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Offer';
+            }
+        });
+
+        connectWebSocket();
+    </script>
+</body>
+</html>
