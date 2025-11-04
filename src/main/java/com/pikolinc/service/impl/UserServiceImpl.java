@@ -17,7 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
-    public UserServiceImpl(JdbiUserRepository jdbiUserRepository) {
+    public UserServiceImpl(UserRepository jdbiUserRepository) {
         this.userRepository = jdbiUserRepository;
         this.userRepository.init();
     }
