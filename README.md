@@ -91,74 +91,162 @@ Routes -> Controller -> Service -> Repository -> DTO
 ```
 
 ```md
-└── src
-    └── main
-        ├── java
-        │   └── com
-        │       └── pikolinc
-        │           ├── config
-        │           │   ├── database
-        │           │   │   └── JdbiProvider.java
-        │           │   ├── json
-        │           │   │   └── GsonProvider.java
-        │           │   ├── DatabaseProvider.java
-        │           │   ├── EnvLoader.java
-        │           │   └── JsonProvider.java
-        │           ├── controller
-        │           │   ├── .gitkeep
-        │           │   └── UserController.java
-        │           ├── dao
-        │           │   └── JdbiUserDAO.java
-        │           ├── dto
-        │           │   └── user
-        │           │       ├── UserCreateDTO.java
-        │           │       ├── UserResponseDTO.java
-        │           │       └── UserUpdateDTO.java
-        │           ├── exception
-        │           │   ├── AlredyExistException.java
-        │           │   ├── ApiExceptionBase.java
-        │           │   ├── BadRequestException.java
-        │           │   ├── ErrorResponse.java
-        │           │   ├── ForbiddenException.java
-        │           │   ├── GlobalExceptionHandler.java
-        │           │   └── NotFoundException.java
-        │           ├── mapper
-        │           │   └── UserMapper.java
-        │           ├── model
-        │           │   ├── .gitkeep
-        │           │   └── User.java
-        │           ├── repository
-        │           │   ├── impl
-        │           │   │   └── JdbiUserRepository.java
-        │           │   ├── .gitkeep
-        │           │   ├── Repository.java
-        │           │   └── UserRepository.java
-        │           ├── routes
-        │           │   ├── Router.java
-        │           │   └── UserApiRoutes.java
-        │           ├── service
-        │           │   ├── impl
-        │           │   │   └── UserServiceImpl.java
-        │           │   ├── .gitkeep
-        │           │   └── UserService.java
-        │           ├── web
-        │           │   └── .gitkeep
-        │           └── Main.java
-        └── resources
+└── main
+    └── java
+        └── com
+            └── pikolinc
+                ├── config
+                │   ├── database
+                │   │   └── JdbiProvider.java
+                │   ├── json
+                │   │   └── GsonProvider.java
+                │   ├── DatabaseProvider.java
+                │   ├── EnvLoader.java
+                │   └── JsonProvider.java
+                │
+                ├── controller
+                │   ├── ItemController.java
+                │   ├── OfferController.java
+                │   ├── UserController.java
+                │   └── WebController.java
+                │
+                ├── dao
+                │   ├── JdbiItemDAO.java
+                │   ├── JdbiOffersDAO.java
+                │   └── JdbiUserDAO.java
+                │
+                ├── dto
+                │   ├── item
+                │   │   ├── ItemCreateDTO.java
+                │   │   ├── ItemResponseDTO.java
+                │   │   └── ItemUpdateDTO.java
+                │   ├── offer
+                │   │   ├── OfferCreateDTO.java
+                │   │   ├── OfferResponseDTO.java
+                │   │   └── OfferUpdateDTO.java
+                │   └──user
+                │       ├── UserCreateDTO.java
+                │       ├── UserResponseDTO.java
+                │       └── UserUpdateDTO.java
+                │
+                ├── enums
+                │   └── OfferStatus.java
+                │
+                ├── exception
+                │   ├── AlredyExistException.java
+                │   ├── ApiExceptionBase.java
+                │   ├── BadRequestException.java
+                │   ├── ErrorResponse.java
+                │   ├── ForbiddenException.java
+                │   ├── GlobalExceptionHandler.java
+                │   ├── NotFoundException.java
+                │   └── ValidationProvider.java
+                │
+                ├── mapper
+                │   ├── ItemMapper.java
+                │   ├── OfferMapper.java
+                │   └── UserMapper.java
+                │
+                ├── model
+                │   ├── Item.java
+                │   ├── Offer.java
+                │   └── User.java
+                │
+                ├── repository
+                │   ├── impl
+                │   │   ├── JdbiItemRepository.java
+                │   │   ├── JdbiOfferRepository.java
+                │   │   └── JdbiUserRepository.java
+                │   ├── ItemRepository.java
+                │   ├── OfferRepository.java
+                │   ├── Repository.java
+                │   └── UserRepository.java
+                │
+                ├── routes
+                │   ├── ItemApiRoutes.java
+                │   ├── OfferApiRoutes.java
+                │   ├── Router.java
+                │   ├── UserApiRoutes.java
+                │   └── WebApiRoutes.java
+                │
+                ├── service
+                │   ├── impl
+                │   │   ├── ItemServiceImpl.java
+                │   │   ├── OfferServiceImpl.java
+                │   │   └── UserServiceImpl.java
+                │   ├── ItemService.java
+                │   ├── OfferService.java
+                │   └── UserService.java
+                │
+                ├── utils
+                │   ├── OfferStatusEnumValidator.java
+                │   ├── RequestValidator.java
+                │   └── ValidOfferStatus.java
+                │
+                ├── web
+                │   ├── ItemWebSocketHandler.java
+                │   └── OfferWebSocketHandler.java
+                │
+                └── Main.java
+    └── resources
+        └── templates
+            ├── item-offers.mustache
+            └── items.mustache
 ```
 
 ## Endpoints
 
-User Endpoints
+Users Endpoints
 
-| Method  | Endpoint          | Description           |
-|---------|-------------------|-----------------------|
-| POST    | /api/v1/users     | Create a new User     |
-| GET     | /api/v1/users     | Get all Users         |
-| GET     | /api/v1/users/:id | Get an User by ID     |
-| PUT     | /api/v1/users/:id | Update an User by ID  |
-| DELETE  | /api/v1/users/:id | Delete an User by ID  |
-| OPTIONS | /api/v1/users/:id | Check if a User exist |
+| Method  | Endpoint                      | Description            |
+|---------|-------------------------------|------------------------|
+| POST    | /api/v1/users                 | Create a new User      |
+| GET     | /api/v1/users                 | Get all Users          |
+| GET     | /api/v1/users/:id             | Get an User by ID      |
+| GET     | /api/v1/users/by-email/:email | Get an User by Email   |
+| PUT     | /api/v1/users/:id             | Update an User by ID   |
+| DELETE  | /api/v1/users/:id             | Delete an User by ID   |
+| OPTIONS | /api/v1/users/:id             | Check if an User exist |
 
 
+Items Endpoint
 
+| Method  | Endpoint          | Description                  |
+|---------|-------------------|------------------------------|
+| POST    | /api/v1/items     | Create a new Item            |
+| GET     | /api/v1/items     | Get all Items                |
+| GET     | /api/v1/items/:id | Get Item by ID               |
+| PUT     | /api/v1/items/:id | Update and Item by ID        |
+| PATCH   | /api/v1/items/:id | Partial Update an Item by ID |
+| OPTIONS | /api/v1/items/:id | Checks if an Item exists     |
+| DELETE  | /api/v1/items/:id | Delete an Item by ID         |
+
+Offers Endpoint
+
+| Method  | Endpoint                   | Descriptions                    |
+|---------|----------------------------|---------------------------------|
+| POST    | /api/v1/offers             | Create a new Offer              |
+| GET     | /api/v1/offers             | Get all Offers                  |
+| GET     | /api/v1/offers/:id         | Get an Offer by ID              |
+| GET     | /api/v1/offers/user/:id    | Get all Offers of an User by ID |
+| GET     | /api/v1/offers/item/:id    | Get All Items of an Item by ID  |
+| PUT     | /api/v1/offers/:id         | Update an Offer by ID           |
+| PUT     | /api/v1/offers/:id/:status | Update status of an Offer by ID |
+| OPTIONS | /api/v1/offers/:id         | Checks if an Offer exist        |
+| DELETE  | /api/v1/offers/:id         | Delete an Offer by ID           |
+
+Web Enpoints
+
+| Method | Endpoint                     | Description                                | Response Type |
+|--------|------------------------------|--------------------------------------------|---------------|
+| GET    | /                            | Generate the template with all the items   | HTML          |
+| GET    | /items/:id/offers            | Generate the template to offer for an Item | HTML          |
+| GET    | /api/items/:id/offers        | Get All the Offers of an Item by ID        | JSON          |
+| GET    | /api/items/:id/current-price | Update the current price of an item by ID  | JSON          |
+
+WebSockets
+
+| PATH       | CLASS                 |
+|------------|-----------------------|
+| /ws/items  | ItemWebSocketHandler  |
+| /ws/offers | OfferWebSocketHandler |
