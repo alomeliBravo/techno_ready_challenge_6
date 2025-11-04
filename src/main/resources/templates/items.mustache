@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auctions - Available Items</title>
+    <style>
+        :root {
+            --bg-color: #f9f9fb;
+            --card-bg: #ffffff;
+            --text-color: #222;
+            --subtext-color: #666;
+            --accent: #4a6cf7;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .websocket-indicator {
+            font-size: 0.9rem;
+            color: var(--subtext-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ws-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .ws-dot.connected {
+            background-color: #4ade80;
+        }
+
+        /* 🔹 Filter bar */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-bar input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: white;
+            color: var(--text-color);
+            width: 120px;
+        }
+
+        .filter-bar button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .filter-bar button:hover {
+            background-color: #3b5ce0;
+            transform: translateY(-1px);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .item-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .item-description {
+            font-size: 0.9rem;
+            color: var(--subtext-color);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .item-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .btn-offer {
+            display: inline-block;
+            text-decoration: none;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-offer:hover {
+            background-color: #3b5ce0;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 3rem;
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--subtext-color);
+            font-size: 1rem;
+        }
+
+        .no-items-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Auctions - Available Items</h1>
+            <div class="websocket-indicator">
+                <span class="ws-dot" id="ws-status"></span>
+                <span id="ws-text">Disconnected</span>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <input type="number" id="min-price" placeholder="Min price">
+            <input type="number" id="max-price" placeholder="Max price">
+            <button id="apply-filter">Filter</button>
+            <button id="clear-filter" style="background-color:#e5e7eb; color:#333;">Clear</button>
+        </div>
+
+        <div id="items-container"></div>
+    </div>
+
+    <script>
+        let ws;
+        let allItems = [];
+
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            ws = new WebSocket(`${protocol}//${window.location.host}/ws/items`);
+
+            ws.onopen = () => {
+                document.getElementById('ws-status').classList.add('connected');
+                document.getElementById('ws-text').textContent = 'Connected';
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'itemsUpdate') loadItems();
+            };
+
+            ws.onclose = () => {
+                document.getElementById('ws-status').classList.remove('connected');
+                document.getElementById('ws-text').textContent = 'Disconnected';
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+
+        function loadItems() {
+            fetch('/api/v1/items')
+                .then(res => res.json())
+                .then(items => {
+                    allItems = items;
+                    renderItems(items);
+                })
+                .catch(console.error);
+        }
+
+        function renderItems(items) {
+            const container = document.getElementById('items-container');
+            if (!items.length) {
+                container.innerHTML = `
+                    <div class="no-items">
+                        <div class="no-items-icon">📦</div>
+                        <p>No items found.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="items-grid">
+                    ${items.map(item => `
+                        <div class="item-card" data-item-id="${item.id}">
+                            <h2 class="item-name">${item.name}</h2>
+                            <p class="item-description">${item.description}</p>
+                            <div class="item-price">$${item.price.toFixed(2)}</div>
+                            <a href="/items/${item.id}/offers" class="btn-offer">Create Offer</a>
+                        </div>
+                    `).join('')}
+                </div>`;
+        }
+
+        document.getElementById('apply-filter').addEventListener('click', () => {
+            const min = parseFloat(document.getElementById('min-price').value) || 0;
+            const max = parseFloat(document.getElementById('max-price').value) || Infinity;
+            renderItems(allItems.filter(i => i.price >= min && i.price <= max));
+        });
+
+        document.getElementById('clear-filter').addEventListener('click', () => {
+            document.getElementById('min-price').value = '';
+            document.getElementById('max-price').value = '';
+            renderItems(allItems);
+        });
+
+        connectWebSocket();
+        loadItems();
+    </script>
+</body>
+</html>

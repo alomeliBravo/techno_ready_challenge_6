@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offers - {{item.name}}</title>
+    <style>
+        :root {
+            --bg: #f9f9fb;
+            --card-bg: #ffffff;
+            --text: #222;
+            --muted: #666;
+            --border: #e5e7eb;
+            --accent: #4a6cf7;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #eab308;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #3b5ce0;
+            transform: translateX(-4px);
+        }
+
+        /* 🔹 Item Header */
+        .item-header {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .item-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-description {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .price-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .price-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .price-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .initial-price {
+            color: #999;
+        }
+
+        .current-price {
+            color: var(--accent);
+        }
+
+        .websocket-status {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-left: 6px;
+            background-color: var(--danger);
+            vertical-align: middle;
+        }
+
+        .websocket-status.connected {
+            background-color: var(--success);
+        }
+
+        /* 🔹 Offers Section */
+        .offers-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--muted);
+            background-color: #fafafa;
+        }
+
+        tr:hover td {
+            background-color: #f5f6f8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pending {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .status-accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .no-offers {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* 🔹 Form Section */
+        .form-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn-submit {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #3b5ce0;
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* 🔹 Messages */
+        .message {
+            display: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .message.success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .price-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Go back to items</a>
+
+        <div class="item-header">
+            <h1 class="item-title">{{item.name}}</h1>
+            <p class="item-description">{{item.description}}</p>
+
+            <div class="price-section">
+                <div class="price-box">
+                    <div class="price-label">Initial Price</div>
+                    <div class="price-value initial-price">$<span id="initial-price">{{item.price}}</span></div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">
+                        Current Price
+                        <span class="websocket-status disconnected" id="ws-status"></span>
+                    </div>
+                    <div class="price-value current-price">$<span id="current-price">{{currentPrice}}</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="offers-section">
+            <h2 class="section-title">Offers</h2>
+
+            <table id="offers-table" {{^hasOffers}}style="display:none;"{{/hasOffers}}>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="offers-tbody">
+                    {{#offers}}
+                    <tr>
+                        <td>{{userName}}</td>
+                        <td>{{userEmail}}</td>
+                        <td><strong>${{amountOffer}}</strong></td>
+                        <td>
+                            <span class="status-badge status-{{offerStatus}}">
+                                {{offerStatus}}
+                            </span>
+                        </td>
+                    </tr>
+                    {{/offers}}
+                </tbody>
+            </table>
+
+            <div class="no-offers" id="no-offers-message" {{#hasOffers}}style="display:none;"{{/hasOffers}}>
+                No offers yet
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2 class="section-title">Create New Offer</h2>
+
+            <div class="message" id="message"></div>
+
+            <form id="offer-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">Your Email</label>
+                    <input type="email" class="form-input" id="email" name="email" placeholder="example@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="amount">Amount to Offer</label>
+                    <input type="number" class="form-input" id="amount" name="amount" step="0.01" min="0.01" placeholder="0.00" required>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submit-btn">Create Offer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const itemId = {{item.id}};
+        let ws;
+
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            ws = new WebSocket(`${protocol}//${window.location.host}/ws/offers`);
+
+            ws.onopen = () => {
+                document.getElementById('ws-status').classList.add('connected');
+                ws.send(JSON.stringify({ action: 'subscribe', itemId }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'priceUpdate' && data.itemId === itemId) {
+                    document.getElementById('current-price').textContent = data.currentPrice.toFixed(2);
