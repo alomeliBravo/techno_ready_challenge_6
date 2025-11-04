@@ -6,6 +6,7 @@ import com.pikolinc.dto.user.UserResponseDTO;
 import com.pikolinc.dto.user.UserUpdateDTO;
 import com.pikolinc.exception.BadRequestException;
 import com.pikolinc.exception.ValidationProvider;
+import com.pikolinc.service.UserService;
 import com.pikolinc.service.impl.UserServiceImpl;
 import com.pikolinc.utils.RequestValidator;
 import spark.Request;
@@ -14,10 +15,10 @@ import spark.Response;
 import java.util.Map;
 
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final JsonProvider jsonProvider;
 
-    public  UserController(UserServiceImpl userService, JsonProvider jsonProvider) {
+    public  UserController(UserService userService, JsonProvider jsonProvider) {
         this.userService = userService;
         this.jsonProvider = jsonProvider;
     }
