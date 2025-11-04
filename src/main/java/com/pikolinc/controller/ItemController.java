@@ -6,18 +6,18 @@ import com.pikolinc.dto.item.ItemResponseDTO;
 import com.pikolinc.dto.item.ItemUpdateDTO;
 import com.pikolinc.exception.ValidationProvider;
 import com.pikolinc.service.ItemService;
-import com.pikolinc.service.impl.ItemServiceImpl;
 import com.pikolinc.utils.RequestValidator;
+import com.pikolinc.web.ItemWebSocketHandler;
 import spark.Request;
 import spark.Response;
 
 import java.util.Map;
 
 public class ItemController {
-    private final ItemServiceImpl itemService;
+    private final ItemService itemService;
     private final JsonProvider jsonProvider;
 
-    public  ItemController(ItemServiceImpl itemService, JsonProvider jsonProvider) {
+    public  ItemController(ItemService itemService, JsonProvider jsonProvider) {
         this.itemService = itemService;
         this.jsonProvider = jsonProvider;
     }
@@ -28,6 +28,7 @@ public class ItemController {
         ItemCreateDTO dto = jsonProvider.fromJson(body, ItemCreateDTO.class);
         ValidationProvider.validate(dto);
         ItemResponseDTO itemResponseDTO = itemService.saveItem(dto);
+        ItemWebSocketHandler.notifyItemsUpdate();
         res.status(201);
         return jsonProvider.toJson(itemResponseDTO);
     }
@@ -49,6 +50,7 @@ public class ItemController {
         long id = Long.parseLong(req.params(":id"));
         ItemCreateDTO dto = jsonProvider.fromJson(body, ItemCreateDTO.class);
         ValidationProvider.validate(dto);
+        ItemWebSocketHandler.notifyItemsUpdate();
         res.status(200);
         return jsonProvider.toJson(this.itemService.updateById(id, dto));
     }
@@ -59,6 +61,7 @@ public class ItemController {
         long id = Long.parseLong(req.params(":id"));
         ItemUpdateDTO dto = jsonProvider.fromJson(body, ItemUpdateDTO.class);
         ValidationProvider.validate(dto);
+        ItemWebSocketHandler.notifyItemsUpdate();
         res.status(200);
         return jsonProvider.toJson(this.itemService.patchById(id, dto));
     }
@@ -76,6 +79,7 @@ public class ItemController {
     public Object deleteItem(Request req, Response res) {
         long id = Long.parseLong(req.params(":id"));
         this.itemService.deleteById(id);
+        ItemWebSocketHandler.notifyItemsUpdate();
         res.status(200);
         return this.jsonProvider.toJson(Map.of("message", "Item has been deleted"));
     }
