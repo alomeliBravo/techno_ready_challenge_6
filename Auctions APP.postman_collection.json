@@ -1,0 +1,358 @@
+{
+	"info": {
+		"_postman_id": "a6a21be3-4139-4dd4-a241-3c2ec7c39f0b",
+		"name": "Auctions APP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40342251"
+	},
+	"item": [
+		{
+			"name": "Users Requests",
+			"item": [
+				{
+					"name": "Create a User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Lomelean\",\r\n    \"email\": \"bobb@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/users/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by Email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{baseurl}}/api/v1/users/by-email/angellomei@gmail.com"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User by ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Angel Daniel Lomelí Bravo\",\r\n    \"email\": \"kas4dev@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/users/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{baseurl}}/api/v1/users/3"
+					},
+					"response": []
+				},
+				{
+					"name": "User exist",
+					"request": {
+						"method": "OPTIONS",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Irving Jael\",\r\n    \"email\": \"Irvinbong@gmail.com\"\r\n}"
+						},
+						"url": "{{baseurl}}/api/v1/users/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Item Requests",
+			"item": [
+				{
+					"name": "Create new Item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Conchitaaa\",\r\n    \"description\": \"Concha rellena de cajeta\",\r\n    \"price\": \"40.23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/items"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/items"
+					},
+					"response": []
+				},
+				{
+					"name": "Get item by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/items/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item by ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Fanta de Fresa\",\r\n    \"description\": \"Fanta de 500 ml envase de vidrio\",\r\n    \"price\": 22.9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/items/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Item by ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Envase de vidrio\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/items/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Check if Item Exist",
+					"request": {
+						"method": "OPTIONS",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/items/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Item by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/items/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Offer Requests",
+			"item": [
+				{
+					"name": "Create New Offer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"itemId\": 1,\r\n    \"offerStatus\": \"accepted\",\r\n    \"amount\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/offers"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Offers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"itemId\": 1,\r\n    \"amount\": 1\r\n}"
+						},
+						"url": "{{baseurl}}/api/v1/offers"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Offer by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/offers/7"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Offers by UserId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"itemId\": 1,\r\n    \"amount\": 1\r\n}"
+						},
+						"url": "{{baseurl}}/api/v1/offers/user/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Offers by Item ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/offers/item/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Offer by ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 2,\r\n    \"itemId\": 2,\r\n    \"offerStatus\": \"accepted\",\r\n    \"amount\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/v1/offers/7"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Offer Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 2,\r\n    \"itemId\": 2,\r\n    \"offerStatus\": \"accepted\",\r\n    \"amount\": 1\r\n}"
+						},
+						"url": "{{baseurl}}/api/v1/offers/7/pending"
+					},
+					"response": []
+				},
+				{
+					"name": "Checks if Offer Exist",
+					"request": {
+						"method": "OPTIONS",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/offers/2"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseurl}}/api/v1/offers/1"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
